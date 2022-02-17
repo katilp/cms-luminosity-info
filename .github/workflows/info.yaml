@@ -14,7 +14,7 @@ jobs:
     - name: Going to a container
       id: container
       run: |
-        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh
+        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh > my.out
         echo ls -l  `ls -l `
         cp *.out outputs
     # upload output file
