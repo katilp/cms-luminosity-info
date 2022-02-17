@@ -17,6 +17,7 @@ jobs:
       run: |
         which python
         echo "Get parameters for $YEAR"
+        python code/read_run_info.py Run2015D
     # run the container with the script in the repository
     - name: Get luminosity summary listings
       id: container
