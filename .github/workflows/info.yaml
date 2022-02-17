@@ -8,8 +8,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2    
     - name: Prepare
-        run: |
-          mkdir outputs
+      run: |
+        mkdir outputs
     # run the container with the script in the repository
     - name: Going to a container
       id: container
