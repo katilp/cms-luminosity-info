@@ -14,7 +14,6 @@ jobs:
     - name: Going to a container
       id: container
       run: |
-        echo "brilcalc --help > my.out" > commands.sh
         docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh
         echo ls -l  `ls -l `
         cp *.out outputs
