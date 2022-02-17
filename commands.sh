@@ -1,8 +1,8 @@
 #!/bin/sh -l
 # exit on erro
 set -e
-sudo chown $USER /mnt/vol
+# sudo chown $USER /mnt/vol
 
-brilcalc --help > my.out
+brilcalc --help 
 
-cp *.out /mnt/vol/
+# cp *.out /mnt/vol/
