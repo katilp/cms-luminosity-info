@@ -6,7 +6,21 @@ jobs:
     runs-on: ubuntu-latest
     name: create lumi tables
     steps:
-    - uses: actions/checkout@v2
-    - name: Check the runner
+    - uses: actions/checkout@v2    
+    - name: Prepare
       run: |
-        which docker
+        mkdir outputs
+    # run the container with the script in the repository
+    - name: Going to a container
+      id: container
+      run: |
+        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh > my.out
+        echo ls -l  `ls -l `
+        cp *.out outputs
+    # upload output file
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: output
+        path: outputs/
+   
