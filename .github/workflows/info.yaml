@@ -20,14 +20,16 @@ jobs:
         echo "Get parameters for $YEAR"
         runmin=$(python code/read_run_values.py $ERA | cut -d , -f 1)
         runmax=$(python code/read_run_values.py $ERA | cut -d , -f 2)
+        echo "::set-env name=RUNMIN::$runmin"
+        echo "::set-env name=RUNMAX::$runmax"
     # run the container with the script in the repository
     - name: Get luminosity summary listings
       id: container
       run: |
         wget https://opendata.cern.ch/record/14210/files/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt -O cert.txt
         docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt > outputs/$YEAR'lumi.txt'
-        echo $runmin
-        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt $runmin $runmax > outputs/$ERA'lumi.txt'
+        echo Run range min: $RUNMIN
+        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt $RUNMIN $RUNMAX > outputs/$ERA'lumi.txt'
         echo ls -l outputs `ls -l outputs`
     # upload output file
     - name: Upload artifact
