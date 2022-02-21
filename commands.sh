@@ -3,9 +3,15 @@
 # exit on error
 set -e
 
-if [ -z "$1" ]; then runmin=256630; else runmin=$1; fi
-if [ -z "$2" ]; then runmax=260627; else runmax=$2; fi
-if [ -z "$3" ]; then cert=Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt; else cert=$3; fi
-
-brilcalc lumi -c web --begin $runmin --end $runmax -i /mnt/vol/$cert
-
+cert=$1
+if [  -z "$2" ]
+then
+  brilcalc lumi -c web -i /mnt/vol/$cert -u /fb --normtag /mnt/vol/normtag_PHYSICS.json
+elif [ -z "$3" ]
+then
+  echo "Give maximum range" 
+else
+  runmin=$2
+  runmax=$3
+  brilcalc lumi -c web --begin $runmin --end $runmax -i /mnt/vol/$cert -u /fb --normtag /mnt/vol/normtag_PHYSICS.json
+fi
