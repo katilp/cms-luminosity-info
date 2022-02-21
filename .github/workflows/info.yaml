@@ -34,7 +34,7 @@ jobs:
         runmin=$(cat runmin)
         runmax=$(cat runmax)
         docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ $runmin $runmax > outputs/$ERA'lumi.txt'
-        # Detaile csv per year
+        # Detailed csv per year
         docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt csv byls > outputs/$YEAR'lumibyls.csv'
 
         echo ls -l outputs `ls -l outputs`
