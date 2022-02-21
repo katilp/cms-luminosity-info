@@ -41,7 +41,7 @@ def read_run_range(run_period):
 def main():
     "Do the job."
 
-    print(read_run_range(run_period))
+    print (*read_run_range(run_period), sep =', ')
 
 if __name__ == "__main__":
     main()
