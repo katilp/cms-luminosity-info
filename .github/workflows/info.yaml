@@ -27,11 +27,16 @@ jobs:
       id: container
       run: |
         wget https://opendata.cern.ch/record/14210/files/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt -O cert.txt
-        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt > outputs/$YEAR'lumi.txt'
+        # Summary txt table per year
+        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ > outputs/$YEAR'lumi.txt'
         ls -l
+        # Summary txt table per era
         runmin=$(cat runmin)
         runmax=$(cat runmax)
-        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt $runmin $runmax > outputs/$ERA'lumi.txt'
+        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ $runmin $runmax > outputs/$ERA'lumi.txt'
+        # Detaile csv per year
+        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt csv byls > outputs/$YEAR'lumibyls.csv'
+
         echo ls -l outputs `ls -l outputs`
     # upload output file
     - name: Upload artifact
