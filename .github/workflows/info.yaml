@@ -1,6 +1,6 @@
 name: Build tables
 on:
-  - pull_request
+  workflow_dispatch
 env:
   YEAR: 2015   
 jobs:
