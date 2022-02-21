@@ -22,10 +22,9 @@ jobs:
     - name: Get luminosity summary listings
       id: container
       run: |
-        wget https://opendata.cern.ch/record/14210/files/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt
-        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh > my.out
-        echo ls -l  `ls -l `
-        cp *.out outputs
+        wget https://opendata.cern.ch/record/14210/files/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt -o cert.txt
+        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt > outputs/$YEAR'lumi.txt'
+        echo ls -l outputs `ls -l outputs`
     # upload output file
     - name: Upload artifact
       uses: actions/upload-artifact@v2
