@@ -38,6 +38,11 @@ jobs:
         docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt csv byls > outputs/$YEAR'lumibyls.csv'
 
         echo ls -l outputs `ls -l outputs`
+    # Build the luminosity record
+    - name: Build the record
+      id: record
+      run: |
+        python code/lumi_records.py > outputs/rec.json
     # upload output file
     - name: Upload artifact
       uses: actions/upload-artifact@v2

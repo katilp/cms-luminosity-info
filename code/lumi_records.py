@@ -39,7 +39,6 @@ def create_record(recid, year, uncertainty, lumi_ref):
 
     year_created = year
     year_published = datetime.date.today().strftime("%Y")
-    year_published = "2022"
 
     rec["abstract"] = {}
 
