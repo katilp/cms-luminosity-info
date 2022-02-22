@@ -18,8 +18,8 @@ jobs:
     - name: Get parameters
       run: |
         which python
-        echo "Get parameters for $YEAR"
-        echo "ERAS: $ERAS"
+        echo "Get parameters for " $YEAR
+        echo "ERAS: " $ERAS
         runmin=$(python code/read_run_values.py $ERA | cut -d , -f 1)
         runmax=$(python code/read_run_values.py $ERA | cut -d , -f 2)
         echo $runmin > runmin
