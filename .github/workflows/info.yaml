@@ -4,7 +4,7 @@ on:
 env:
   YEAR: 2015
   ERA: Run2015D   
-  ERAS: Run2015C, Run2015C
+  ERAS: Run2015C Run2015C
 jobs:
   Lumi:
     runs-on: ubuntu-latest
@@ -18,8 +18,8 @@ jobs:
     - name: Get parameters
       run: |
         which python
-        echo "Get parameters for " $YEAR
-        echo "ERAS: " $ERAS
+        echo "Get parameters for $YEAR"
+        for elem in ${ERAS[*]}; do echo "${elem}"; done;
         runmin=$(python code/read_run_values.py $ERA | cut -d , -f 1)
         runmax=$(python code/read_run_values.py $ERA | cut -d , -f 2)
         echo $runmin > runmin
