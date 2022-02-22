@@ -3,7 +3,7 @@ on:
   workflow_dispatch
 env:
   YEAR: 2015
-  ERAS: Run2015C Run2015C
+  ERAS: Run2015C Run2015D
 jobs:
   Lumi:
     runs-on: ubuntu-latest
@@ -24,21 +24,20 @@ jobs:
       id: container
       run: | 
         # Summary txt table per year
-        # docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ > outputs/$YEAR'lumi.txt'
-        ls -l
+        echo "Create summary table for $YEAR"
+        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ > outputs/$YEAR'lumi.txt'
         # Summary txt table per era, for all listed eras
-        echo "Create tables for $ERAS"
+        echo "Create summary tables for $ERAS"
         for era in ${ERAS[*]} 
         do 
           echo "doing " $era
           runmin=$(python code/read_run_values.py $era | cut -d , -f 1)
           runmax=$(python code/read_run_values.py $era | cut -d , -f 2)
-          # docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ $runmin $runmax > outputs/$era'lumi.txt'
-        done
-        
+          docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ $runmin $runmax > outputs/$era'lumi.txt'
+        done        
         # Detailed csv per year
-        # docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt csv byls > outputs/$YEAR'lumibyls.csv'
-
+        echo "Create full csv for $YEAR"
+        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt csv byls > outputs/$YEAR'lumibyls.csv'
         echo ls -l outputs `ls -l outputs`
     # Build the luminosity record
     - name: Build the records
