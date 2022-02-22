@@ -39,10 +39,11 @@ jobs:
 
         echo ls -l outputs `ls -l outputs`
     # Build the luminosity record
-    - name: Build the record
+    - name: Build the records
       id: record
       run: |
-        python code/lumi_records.py > outputs/rec.json
+        python code/lumi_records.py > outputs/lumi_records.json
+        python code/vali_records.py > outputs/vali_records.json
     # upload output file
     - name: Upload artifact
       uses: actions/upload-artifact@v2
