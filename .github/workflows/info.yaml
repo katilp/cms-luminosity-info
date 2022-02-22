@@ -4,6 +4,7 @@ on:
 env:
   YEAR: 2015
   ERA: Run2015D   
+  ERAS: Run2015C, Run2015C
 jobs:
   Lumi:
     runs-on: ubuntu-latest
@@ -18,6 +19,7 @@ jobs:
       run: |
         which python
         echo "Get parameters for $YEAR"
+        echo "ERAS: $ERAS"
         runmin=$(python code/read_run_values.py $ERA | cut -d , -f 1)
         runmax=$(python code/read_run_values.py $ERA | cut -d , -f 2)
         echo $runmin > runmin
@@ -28,14 +30,14 @@ jobs:
       run: |
         wget https://opendata.cern.ch/record/14210/files/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt -O cert.txt
         # Summary txt table per year
-        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ > outputs/$YEAR'lumi.txt'
+        # docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ > outputs/$YEAR'lumi.txt'
         ls -l
         # Summary txt table per era
         runmin=$(cat runmin)
         runmax=$(cat runmax)
-        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ $runmin $runmax > outputs/$ERA'lumi.txt'
+        # docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ $runmin $runmax > outputs/$ERA'lumi.txt'
         # Detailed csv per year
-        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt csv byls > outputs/$YEAR'lumibyls.csv'
+        # docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt csv byls > outputs/$YEAR'lumibyls.csv'
 
         echo ls -l outputs `ls -l outputs`
     # Build the luminosity record
