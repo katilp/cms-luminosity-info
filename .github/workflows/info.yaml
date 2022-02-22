@@ -1,9 +1,9 @@
-name: Build tables
+name: Build listings and records
 on:
   workflow_dispatch
 env:
   YEAR: 2015
-  ERA: Run2015D   
+  ERAS: Run2015C Run2015D
 jobs:
   Lumi:
     runs-on: ubuntu-latest
@@ -14,29 +14,30 @@ jobs:
       run: |
         mkdir outputs
     # Get the parameters for lumi listings
-    - name: Get parameters
+    - name: Get validated runs file
       run: |
-        which python
-        echo "Get parameters for $YEAR"
-        runmin=$(python code/read_run_values.py $ERA | cut -d , -f 1)
-        runmax=$(python code/read_run_values.py $ERA | cut -d , -f 2)
-        echo $runmin > runmin
-        echo $runmax > runmax
+        echo "Get validated runs for $YEAR"
+        url=$(grep $YEAR inputs/lumi_info.txt | awk -F "," '{print $NF}')
+        wget $url -O cert.txt
     # run the container with the script in the repository
     - name: Get luminosity summary listings
       id: container
-      run: |
-        wget https://opendata.cern.ch/record/14210/files/Cert_13TeV_16Dec2015ReReco_Collisions15_25ns_JSON_v2.txt -O cert.txt
+      run: | 
         # Summary txt table per year
+        echo "Create summary table for $YEAR"
         docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ > outputs/$YEAR'lumi.txt'
-        ls -l
-        # Summary txt table per era
-        runmin=$(cat runmin)
-        runmax=$(cat runmax)
-        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ $runmin $runmax > outputs/$ERA'lumi.txt'
+        # Summary txt table per era, for all listed eras
+        echo "Create summary tables for $ERAS"
+        for era in ${ERAS[*]} 
+        do 
+          echo "doing " $era
+          runmin=$(python code/read_run_values.py $era | cut -d , -f 1)
+          runmax=$(python code/read_run_values.py $era | cut -d , -f 2)
+          docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ $runmin $runmax > outputs/$era'lumi.txt'
+        done        
         # Detailed csv per year
+        echo "Create full csv for $YEAR"
         docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt csv byls > outputs/$YEAR'lumibyls.csv'
-
         echo ls -l outputs `ls -l outputs`
     # Build the luminosity record
     - name: Build the records
