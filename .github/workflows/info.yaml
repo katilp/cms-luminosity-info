@@ -19,7 +19,7 @@ jobs:
         # TODO: Move this to the next step?
         echo "Get validated runs for $YEAR"
         url=$(grep $YEAR inputs/lumi_info.txt | awk -F "," '{print $NF}')
-        wget url -O cert.txt
+        wget $url -O cert.txt
     # run the container with the script in the repository
     - name: Get luminosity summary listings
       id: container
