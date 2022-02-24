@@ -34,7 +34,6 @@ def run_range_text(input):
     else:
         od_run_periods = read_run_periods(input, 'od')
 
-    print(od_run_periods)
     run_range_text = ''
     for period in od_run_periods:
         run_range_text += ' '+period+' is between run numbers '+",".join(read_run_range(period)).replace(",", " and ")+'.'
