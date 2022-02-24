@@ -24,3 +24,17 @@ def read_run_range(run_period):
               run_range.append(line.split(",")[1].strip())
               run_range.append(line.split(",")[2].strip())
     return run_range
+
+def run_range_text(input):
+    """Return run range text for open data run rages for a given year or a give run range."""
+
+    if "Run" in input:
+        od_run_periods = []
+        od_run_periods.append(input)
+    else:
+        od_run_periods = read_run_periods(input, 'od')
+
+    run_range_text = ''
+    for period in od_run_periods:
+        run_range_text += ' '+period+' is between run numbers '+",".join(read_run_range(period)).replace(",", " and ")+'.'
+    return run_range_text
