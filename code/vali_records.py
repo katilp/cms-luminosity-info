@@ -28,12 +28,11 @@ def create_record(recid, year, filename):
         muon_text = ''
         muon_desc = ''
 
+    
     rec["abstract"] = {}
-
-    # Fix run range
     rec["abstract"]["description"] = (
             "<p>This file describes which luminosity sections in which runs are considered good and should be processed%s.</p>" % muon_desc
-            + "<p>This list covers proton-proton data taking in %s, %s is between run numbers 256630 and 260627.</p>" % (year, ",".join(read_run_periods(year, 'od')))
+            + "<p>This list covers proton-proton data taking in %s.%s</p>" % (year, run_range_text(year))
         )
 
     rec["accelerator"] = "CERN-LHC"
@@ -60,7 +59,7 @@ def create_record(recid, year, filename):
     rec["license"] = {}
     rec["license"]["attribution"] = "CC0"
 
-    rec["links"] = {}
+    #rec["links"] = {}
 
     rec["publisher"] = "CERN Open Data Portal"
 
