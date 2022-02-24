@@ -2,6 +2,8 @@
 
 import subprocess
 import sys
+from helpers import *
+
 
 """
 Read run range information from an input file.
@@ -13,18 +15,6 @@ if "Run" in input:
 else:
     year = input
 
-
-
-def read_run_range(run_period):
-    """Read run range for the given run period."""
-
-    run_range = []
-    with open("./inputs/run_ranges_run2.txt", "r") as f:
-        for line in f.readlines():
-            if line.split(",")[0] == run_period:                
-              run_range.append(line.split(",")[1].strip())
-              run_range.append(line.split(",")[2].strip())
-    return run_range
 
 def main():
     "Do the job."
