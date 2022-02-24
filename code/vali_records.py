@@ -4,6 +4,7 @@ import json
 import datetime
 import subprocess
 import requests
+from helpers import *
 
 """
 Create validated data records.
@@ -11,24 +12,6 @@ Create validated data records.
 
 RECID_START = 14212
 YEAR_RELEASED = 2015
-
-
-def read_run_periods(year, od):
-    """Read run periods for the given year, if od yes, only those released."""
-
-    run_periods = []
-    with open("./inputs/run_ranges_run2.txt", "r") as f:
-        for line in f.readlines():
-            run_period = line.split(",")[0]
-            opendata = line.split(",")[3]
-            if year in run_period:
-                if 'od' in od:
-                    if 'yes' in opendata:
-                        run_periods.append(run_period)
-                else:
-                    run_periods.append(run_period)
-    return run_periods
-
 
 def create_record(recid, year, filename):
     """Create record for the given year."""
@@ -127,10 +110,8 @@ def main():
     records = []
     recid = RECID_START
     with open("./inputs/lumi_info.txt", "r") as f:
-        for info_line in f.readlines():
+        for info_line in f.readlines()[1:]:
             year = info_line.split(",")[0].strip()
-            uncertainty = info_line.split(",")[1].strip()
-            lumi_ref = info_line.split(",")[2].strip()
             val_recid = info_line.split(",")[3].strip()
             fileurl = info_line.split(",")[4].strip()
             filename = fileurl.split("/")[-1].strip()
