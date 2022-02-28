@@ -5,6 +5,8 @@ import datetime
 import subprocess
 import requests
 from helpers import *
+import pandas as pd
+
 
 """
 Create a luminosity record.
@@ -21,6 +23,7 @@ def create_record(recid, year, uncertainty, lumi_ref, val_recid):
     rec = {}
 
     year_created = year
+    year = str(year)
     year_published = datetime.date.today().strftime("%Y")
     # NB the reference needs to be to cds for this to work:
     url = lumi_ref+'/?of=tm&ot=245__a'
@@ -94,19 +97,20 @@ def main():
 
     records = []
     recid = RECID_START
-    with open("./inputs/lumi_info.txt", "r") as f:
-        for info_line in f.readlines()[1:]:
-            year = info_line.split(",")[0].strip()
-            uncertainty = info_line.split(",")[1].strip()
-            lumi_ref = info_line.split(",")[2].strip()
-            val_recid = info_line.split(",")[3].strip()
-            if float(year) <= float(YEAR_RELEASED):
-                records.append(
-                  create_record(recid, year, uncertainty, lumi_ref, val_recid)
-                )
-                recid += 1
 
-            # create_summary_files(year)
+    all_years = pd.read_csv ('./inputs/lumi_info.csv')
+    released_years = all_years[all_years["year"] <= float(YEAR_RELEASED)] 
+
+    for index, row in released_years.iterrows():
+        records.append(
+            create_record(
+                recid,
+                row["year"],
+                row["lumi uncertainty"],
+                row["luminosity reference in cds"],
+                row["validates runs json"])
+        )
+        recid += 1
 
     print(
         json.dumps(
