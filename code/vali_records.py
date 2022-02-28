@@ -4,6 +4,7 @@ import json
 import datetime
 import subprocess
 import requests
+import pandas as pd
 from helpers import *
 
 """
@@ -19,6 +20,7 @@ def create_record(recid, year, filename):
     rec = {}
 
     year_created = year
+    year = str(year)
     year_published = datetime.date.today().strftime("%Y")
 
     if "Muon" in filename:
@@ -108,19 +110,19 @@ def main():
 
     records = []
     recid = RECID_START
-    with open("./inputs/lumi_info.txt", "r") as f:
-        for info_line in f.readlines()[1:]:
-            year = info_line.split(",")[0].strip()
-            val_recid = info_line.split(",")[3].strip()
-            fileurl = info_line.split(",")[4].strip()
-            filename = fileurl.split("/")[-1].strip()
-            if float(year) <= float(YEAR_RELEASED):
-                records.append(
-                  create_record(recid, year, filename)
-                )
-                recid += 1
 
-            # create_summary_files(year)
+    all_years = pd.read_csv ('./inputs/lumi_info.csv')
+    released_years = all_years[all_years["year"] <= float(YEAR_RELEASED)] 
+
+    for index, row in released_years.iterrows():
+        records.append(
+            create_record(
+                recid,
+                row["year"],
+                row["validates runs json"].split("/")[-1].strip())
+        )
+        recid += 1
+
 
     print(
         json.dumps(

@@ -5,6 +5,8 @@ import datetime
 import subprocess
 import requests
 from helpers import *
+import pandas as pd
+
 
 """
 Create a luminosity record.
@@ -21,6 +23,7 @@ def create_record(recid, year, uncertainty, lumi_ref, val_recid):
     rec = {}
 
     year_created = year
+    year = str(year)
     year_published = datetime.date.today().strftime("%Y")
     # NB the reference needs to be to cds for this to work:
     url = lumi_ref+'/?of=tm&ot=245__a'
@@ -29,7 +32,7 @@ def create_record(recid, year, uncertainty, lumi_ref, val_recid):
     rec["abstract"] = {}
 
     rec["abstract"]["description"] = (
-            "<p>CMS measures the luminosity using different luminometers (luminosity detectors) and algorithms. The luminometer given the best value for each luminosity section is recorded in a 'normtag' file that is used in the luminosity calculation.</p>"
+            "<p>CMS measures the luminosity using different luminometers (luminosity detectors) and algorithms. The luminometer giving the best value for each luminosity section is recorded in a 'normtag' file that is used in the luminosity calculation.</p>"
             + "<p>The integrated luminosity for validated runs and luminosity sections of the %s public data (%s) is available in %slumi.txt (The integrated luminosity for validated runs and luminosity sections of all %s p-p data taking is available in %slumi.txt.)</p>" % (year, ",".join(read_run_periods(year, 'od')),  ",".join(read_run_periods(year, 'od')), year, year)
             + "<p> For luminosity calculation, a detailed list of luminosity by lumi section is provided in <a href=\"/record/%s/files/%slumibyls.csv\">%slumibyls.csv</a> for the <a href=\"/record/%s\">list of validated runs</a> and lumi sections.</p>" % (recid, year, year, val_recid)
             + "<p>The uncertainty in the luminosity measurement of %s data should be considered as %s%%(reference <a href=\"%s\">%s</a>).</p>" % (year, uncertainty, lumi_ref, lumi_ref_title)
@@ -94,19 +97,20 @@ def main():
 
     records = []
     recid = RECID_START
-    with open("./inputs/lumi_info.txt", "r") as f:
-        for info_line in f.readlines()[1:]:
-            year = info_line.split(",")[0].strip()
-            uncertainty = info_line.split(",")[1].strip()
-            lumi_ref = info_line.split(",")[2].strip()
-            val_recid = info_line.split(",")[3].strip()
-            if float(year) <= float(YEAR_RELEASED):
-                records.append(
-                  create_record(recid, year, uncertainty, lumi_ref, val_recid)
-                )
-                recid += 1
 
-            # create_summary_files(year)
+    all_years = pd.read_csv ('./inputs/lumi_info.csv')
+    released_years = all_years[all_years["year"] <= float(YEAR_RELEASED)] 
+
+    for index, row in released_years.iterrows():
+        records.append(
+            create_record(
+                recid,
+                row["year"],
+                row["lumi uncertainty"],
+                row["luminosity reference in cds"],
+                row["validates runs json"])
+        )
+        recid += 1
 
     print(
         json.dumps(
