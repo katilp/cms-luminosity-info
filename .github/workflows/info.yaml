@@ -43,7 +43,7 @@ jobs:
     - name: Build the records
       id: record
       run: |
-        pip install pandas
+        python -m pip install -r requirements.txt
         python code/lumi_records.py > outputs/lumi_records.json
         python code/vali_records.py > outputs/vali_records.json
     # upload output file

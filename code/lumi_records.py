@@ -98,7 +98,8 @@ def main():
     records = []
     recid = RECID_START
 
-    all_years = pd.read_csv ('./inputs/lumi_info.csv')
+
+    all_years = pd.read_json('./inputs/cms_release_info.json')
     released_years = all_years[all_years["year"] <= float(YEAR_RELEASED)] 
 
     for index, row in released_years.iterrows():
@@ -106,11 +107,13 @@ def main():
             create_record(
                 recid,
                 row["year"],
-                row["lumi uncertainty"],
-                row["luminosity reference in cds"],
-                row["validates runs json"])
+                row["lumi_uncertainty"],
+                row["luminosity_reference"],
+                row["val_json_golden"])
         )
         recid += 1
+
+
 
     print(
         json.dumps(
