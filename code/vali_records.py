@@ -112,16 +112,22 @@ def main():
     recid = RECID_START
 
     all_years = pd.read_json('./inputs/cms_release_info.json')
+
+    print(all_years.head())
     released_years = all_years[all_years["year"] <= float(YEAR_RELEASED)] 
 
     for index, row in released_years.iterrows():
-        records.append(
-            create_record(
-                recid,
-                row["year"],
-                row["val_json_golden"].split("/")[-1].strip())
-        )
-        recid += 1
+        for val in row["val_json"]:
+            print(val["url"].split("/")[-1].strip())
+
+            records.append(
+                create_record(
+                    recid,
+                    row["year"],
+                    val["url"].split("/")[-1].strip())
+                    #row["val_json_golden"].split("/")[-1].strip())
+            )
+            recid += 1
 
 
     print(
