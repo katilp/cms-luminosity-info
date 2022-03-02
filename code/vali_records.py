@@ -112,8 +112,6 @@ def main():
     recid = RECID_START
 
     all_years = pd.read_json('./inputs/cms_release_info.json')
-
-    print(all_years.head())
     released_years = all_years[all_years["year"] <= float(YEAR_RELEASED)] 
 
     for index, row in released_years.iterrows():
