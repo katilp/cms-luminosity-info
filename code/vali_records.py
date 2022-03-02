@@ -115,13 +115,15 @@ def main():
     released_years = all_years[all_years["year"] <= float(YEAR_RELEASED)] 
 
     for index, row in released_years.iterrows():
-        records.append(
-            create_record(
-                recid,
-                row["year"],
-                row["val_json_golden"].split("/")[-1].strip())
-        )
-        recid += 1
+        for val in row["val_json"]:
+            records.append(
+                create_record(
+                    recid,
+                    row["year"],
+                    val["url"].split("/")[-1].strip())
+                    #row["val_json_golden"].split("/")[-1].strip())
+            )
+            recid += 1
 
 
     print(

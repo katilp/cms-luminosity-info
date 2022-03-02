@@ -109,7 +109,7 @@ def main():
                 row["year"],
                 row["lumi_uncertainty"],
                 row["luminosity_reference"],
-                row["val_json_golden"])
+                row["val_json"][0]["recid"]) # This requires the json files to be in a specific order, with "golden" first
         )
         recid += 1
 
