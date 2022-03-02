@@ -116,8 +116,6 @@ def main():
 
     for index, row in released_years.iterrows():
         for val in row["val_json"]:
-            print(val["url"].split("/")[-1].strip())
-
             records.append(
                 create_record(
                     recid,
