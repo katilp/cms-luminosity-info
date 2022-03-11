@@ -68,7 +68,7 @@ def create_record(recid, year, filename):
     rec["recid"] = str(recid)
 
     # Implement a check to see which run periods actually are in the json file 
-    rec["run_period"] = read_run_periods(year, 'all')
+    rec["run_period"] = read_run_periods(year, 'pp-phys')
 
     rec["title"] = (
         "CMS list of validated runs %s"
@@ -111,19 +111,24 @@ def main():
     records = []
     recid = RECID_START
 
-    all_years = pd.read_json('./inputs/cms_release_info.json')
-    released_years = all_years[all_years["year"] <= float(YEAR_RELEASED)] 
-
-    for index, row in released_years.iterrows():
-        for val in row["val_json"]:
-            records.append(
-                create_record(
-                    recid,
-                    row["year"],
-                    val["url"].split("/")[-1].strip())
-                    #row["val_json_golden"].split("/")[-1].strip())
-            )
-            recid += 1
+    with open('./inputs/cms_release_info.json') as f:
+         data = f.read()
+    
+    # reconstructing the data as a dictionary
+    all_years = json.loads(data)
+    
+    year = str(YEAR_RELEASED) 
+    this_year = all_years[year]
+    
+    for val in this_year["val_json"]:
+        records.append(
+            create_record(
+                recid,
+                this_year["year"],
+                val["url"].split("/")[-1].strip())
+                #row["val_json_golden"].split("/")[-1].strip())
+        )
+        recid += 1
 
 
     print(
