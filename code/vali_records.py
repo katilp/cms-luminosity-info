@@ -4,7 +4,6 @@ import json
 import datetime
 import subprocess
 import requests
-import pandas as pd
 from helpers import *
 
 """
