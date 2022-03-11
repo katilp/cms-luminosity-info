@@ -1,14 +1,18 @@
-def read_run_periods(year, od):
-    """Read run periods for the given year, if od yes, only those released."""
+def read_run_periods(year, flag):
+    """Read run periods for the given year, if flag od, only those released, if flag pp-phys, only those certified for pp."""
 
     run_periods = []
     with open("./inputs/run_ranges_run2.txt", "r") as f:
         for line in f.readlines():
             run_period = line.split(",")[0]
             opendata = line.split(",")[3]
+            run_type = line.split(",")[4]
             if year in run_period:
-                if 'od' in od:
+                if 'od' in flag:
                     if 'yes' in opendata:
+                        run_periods.append(run_period)
+                elif 'pp-phys' in flag:
+                    if 'pp-phys' in run_type:
                         run_periods.append(run_period)
                 else:
                     run_periods.append(run_period)

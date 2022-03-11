@@ -5,8 +5,6 @@ import datetime
 import subprocess
 import requests
 from helpers import *
-import pandas as pd
-
 
 """
 Create a luminosity record.
@@ -76,7 +74,7 @@ def create_record(recid, year, uncertainty, lumi_ref, val_recid):
     rec["relations"]["type"] = "isRelatedTo"
 
 
-    rec["run_period"] = read_run_periods(year, 'all')
+    rec["run_period"] = read_run_periods(year, 'pp-phys')
 
     rec["title"] = (
         "CMS luminosity information, for %s CMS open data"
@@ -98,20 +96,23 @@ def main():
     records = []
     recid = RECID_START
 
-
-    all_years = pd.read_json('./inputs/cms_release_info.json')
-    released_years = all_years[all_years["year"] <= float(YEAR_RELEASED)] 
-
-    for index, row in released_years.iterrows():
-        records.append(
-            create_record(
-                recid,
-                row["year"],
-                row["lumi_uncertainty"],
-                row["luminosity_reference"],
-                row["val_json"][0]["recid"]) # This requires the json files to be in a specific order, with "golden" first
-        )
-        recid += 1
+    with open('./inputs/cms_release_info.json') as f:
+         data = f.read()
+    
+    # reconstructing the data as a dictionary
+    all_years = json.loads(data)
+    
+    year = str(YEAR_RELEASED) 
+    this_year = all_years[year]
+    
+    records.append(
+        create_record(
+            recid,
+            this_year["year"],
+            this_year["lumi_uncertainty"],
+            this_year["luminosity_reference"],
+            this_year["val_json"][0]["recid"]) # This requires the json files to be in a specific order, with "golden" first
+    )
 
 
 
