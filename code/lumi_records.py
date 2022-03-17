@@ -95,15 +95,19 @@ def main():
 
     records = []
     recid = RECID_START
+    year = str(YEAR_RELEASED)
 
-    with open('./inputs/cms_release_info.json') as f:
-         data = f.read()
+    # this would read from the local json file
+    # with open('./inputs/cms_release_info.json') as f:
+    #      data = f.read()
     
-    # reconstructing the data as a dictionary
-    all_years = json.loads(data)
-    
-    year = str(YEAR_RELEASED) 
-    this_year = all_years[year]
+    # # reconstructing the data as a dictionary
+    # all_years = json.loads(data)    
+    # this_year = all_years[year]
+
+    # this gets json from the api server
+    url = 'http://api-server-cms-release-info.app.cern.ch/years/'+year
+    this_year = json.loads(requests.get(url).text.strip())
     
     records.append(
         create_record(
