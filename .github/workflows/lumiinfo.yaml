@@ -1,4 +1,4 @@
-name: Build listings and records
+name: Build listings and records 
 on:
   workflow_dispatch
 env:
@@ -31,6 +31,10 @@ jobs:
         # Summary txt table per year
         echo "Create summary table for $YEAR"
         docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ > outputs/$YEAR'lumi.txt'
+        # Prescale listing for each run in a single csv file
+        echo "Get prescale listing for all run numbers"
+        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt csv summ | grep -v "#" | awk '{ print $1 }' FS=':' > run_numbers.txt
+        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/prescale.sh > outputs/'prescale'$YEAR'.csv'
         # Summary txt table per era, for all listed eras
         echo "Create summary tables for $ERAS"
         for era in ${ERAS[*]} 
