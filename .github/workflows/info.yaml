@@ -3,7 +3,10 @@ on:
   workflow_dispatch
 env:
   YEAR: 2015
-  ERAS: Run2015C Run2015D
+  ERAS: Run2015D
+defaults:
+  run: 
+    working-directory: cms-YYYY-luminosity
 jobs:
   Lumi:
     runs-on: ubuntu-latest
@@ -17,7 +20,7 @@ jobs:
     - name: Get validated runs file
       run: |
         echo "Get validated runs for $YEAR"
-        url=$(grep $YEAR inputs/lumi_info.txt | awk -F "," '{print $NF}')
+        url=$(jq '."'$YEAR'".val_json[0].url' ../cms-release-info/cms_release_info.json | tr -d '"')
         wget $url -O cert.txt
     # run the container with the script in the repository
     - name: Get luminosity summary listings
@@ -40,11 +43,11 @@ jobs:
         docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt csv byls > outputs/$YEAR'lumibyls.csv'
         echo ls -l outputs `ls -l outputs`
     # Build the luminosity record
-    - name: Build the records
+    - name: Build the luminosity records
       id: record
       run: |
         python code/lumi_records.py > outputs/lumi_records.json
-        python code/vali_records.py > outputs/vali_records.json
+        #python code/vali_records.py > outputs/vali_records.json
     # upload output file
     - name: Upload artifact
       uses: actions/upload-artifact@v2

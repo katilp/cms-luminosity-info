@@ -2,7 +2,7 @@ def read_run_periods(year, flag):
     """Read run periods for the given year, if flag od, only those released, if flag pp-phys, only those certified for pp."""
 
     run_periods = []
-    with open("./inputs/run_ranges_run2.txt", "r") as f:
+    with open("../cms-release-info/run_ranges_run2.txt", "r") as f:
         for line in f.readlines():
             run_period = line.split(",")[0]
             opendata = line.split(",")[3]
@@ -22,7 +22,7 @@ def read_run_range(run_period):
     """Read run range for the given run period."""
 
     run_range = []
-    with open("./inputs/run_ranges_run2.txt", "r") as f:
+    with open("../cms-release-info/run_ranges_run2.txt", "r") as f:
         for line in f.readlines():
             if line.split(",")[0] == run_period:                
               run_range.append(line.split(",")[1].strip())
