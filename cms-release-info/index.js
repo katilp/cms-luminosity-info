@@ -32,10 +32,11 @@ function welcome(request,response)
 	console.log(request.get('Host'));
 	var reply={
 		usage: "Add a path, available paths: http://"+hostname+"/years and http://"+hostname+"/runeras",
-		years: "use: /years/ to get all year infor or: /years/<key> for a specific value",
+		years: "use: /years/ to get all year info or: /years/<key> for a specific value",
 		runeras: "use: /runeras/ to get all run era info or: /runeras/<key> for a specific value",
 		queries: "Pass a query with: ?<akey>=<avalue>",
-		example: "http://"+hostname+"/runeras/run_era?year=2015"
+		example: "http://"+hostname+"/runeras/run_era?year=2015",
+		output: "For year info, output=plain returns single values without square brackets"
 	}
     response.send(reply);
 }
@@ -47,9 +48,17 @@ function searchYear(request,response)
 	var key=request.params.mykey;
 	var filters=request.query;
 	var filtered_years = years;
+	var output_value;
 
 	for (var reqkey in filters) {
-		filtered_years = filtered_years.filter(a_year => a_year[reqkey] == filters[reqkey]);
+		if (reqkey == 'output')
+		{
+			output_value = filters[reqkey];
+		}
+		else
+		{
+			filtered_years = filtered_years.filter(a_year => a_year[reqkey] == filters[reqkey]);
+		}
 	}
 
 	var reply;
@@ -66,8 +75,21 @@ function searchYear(request,response)
 	}
 	
     console.log(reply);
-	if (reply.length == 1) reply = String(reply[0]);
 
+	// There are reasons to do this (i.e. to get CMSSW_5_3_32 instead of [ "CMSSW_5_3_32" ])
+	// but this is probably not a good idea in general
+	// adding a query parameter for output format: output=plain returns reply without square brackets
+	if (reply.length == 1 && output_value == 'plain') 
+	{
+		if (typeof reply[0] == 'string') 
+		{
+			reply = String(reply[0]);
+		}
+		else
+		{
+			reply = reply[0];
+		}
+	}
 	response.send(reply);
 }
 
