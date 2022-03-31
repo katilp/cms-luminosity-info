@@ -25,7 +25,7 @@ jobs:
         curl http://api-server-cms-release-info.app.cern.ch/years/val_json?year=$YEAR > myjs.json
         url=$(jq '.[0][0].url' myjs.json | tr -d '"')
         wget $url -O cert.txt
-        cp normtag_PHYSICS_$YEAR.json normtag_PHYSICS.json
+        cp inputs/normtag_PHYSICS_$YEAR.json inputs/normtag_PHYSICS.json
     # run the container with the script in the repository
     - name: Get luminosity summary listings
       id: container
