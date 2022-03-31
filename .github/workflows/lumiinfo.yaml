@@ -22,8 +22,10 @@ jobs:
     - name: Get validated runs file
       run: |
         echo "Get validated runs for $YEAR"
-        url=$(jq '."'$YEAR'".val_json[0].url' ../cms-release-info/cms_release_info.json | tr -d '"')
+        curl http://api-server-cms-release-info.app.cern.ch/years/val_json?year=$YEAR > myjs.json
+        url=$(jq '.[0][0].url' myjs.json | tr -d '"')
         wget $url -O cert.txt
+        cp normtag_PHYSICS_$YEAR.json normtag_PHYSICS.json
     # run the container with the script in the repository
     - name: Get luminosity summary listings
       id: container
@@ -40,8 +42,10 @@ jobs:
         for era in ${ERAS[*]} 
         do 
           echo "doing " $era
-          runmin=$(python ../cms-release-info/read_run_values.py $era | cut -d , -f 1)
-          runmax=$(python ../cms-release-info/read_run_values.py $era | cut -d , -f 2)
+          runmin=$(curl http://api-server-cms-release-info.app.cern.ch/runeras/run_min?run_era=$era)
+          runmin=$(echo ${runmin:1:-1})
+          runmax=$(curl http://api-server-cms-release-info.app.cern.ch/runeras/run_max?run_era=$era)
+          runmax=$(echo ${runmax:1:-1})
           docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ $runmin $runmax > outputs/$era'lumi.txt'
         done        
         # Detailed csv per year
