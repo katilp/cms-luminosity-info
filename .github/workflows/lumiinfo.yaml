@@ -45,8 +45,9 @@ jobs:
       id: container
       run: | 
         # Summary txt table per year
-        YEAR=${{env.YEAR}}
-        echo "Create summary table for '"$YEAR"'"
+        echo "Create summary table for $YEAR"
+        cat cert.txt
+        cat normtag_PHYSICS.json
         docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ > outputs/$YEAR'lumi.txt'
         # Prescale listing for each run in a single csv file
         echo "Get prescale listing for all run numbers"
