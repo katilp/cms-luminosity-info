@@ -23,17 +23,19 @@ jobs:
         TYPE=${{env.TYPE}}
     # Get the part of the normtag file corresponding to validated runs (muons cert file as it has a wider range)
     - name: Normtag file
-      if: ${{env.TYPE}} == "pp"
       run: |
-        echo "Get the normtag file for $TYPE of $YEAR"
-        curl 'http://api-server-cms-release-info.app.cern.ch/years/val_json?year='"$YEAR"'&type='"$TYPE"'' > myjs.json
-        ls -l myjs.json
-        muonurl=$(jq -r '.[0][1].url' myjs.json)
-        echo $muonurl
-        wget $muonurl -O cert.txt
-        wget https://raw.githubusercontent.com/CMS-LUMI-POG/Normtags/master/normtag_PHYSICS.json -O normtag_PHYSICS.json
-        source normtag.sh > outputs/normtag_PHYSICS_$YEAR.json
-        cp outputs/normtag_PHYSICS_$YEAR.json normtag_PHYSICS.json
+        if (( $YEAR > 2013 ))
+        then
+          echo "Get the normtag file for $TYPE of $YEAR"
+          curl 'http://api-server-cms-release-info.app.cern.ch/years/val_json?year='"$YEAR"'&type='"$TYPE"'' > myjs.json
+          ls -l myjs.json
+          muonurl=$(jq -r '.[0][1].url' myjs.json)
+          echo $muonurl
+          wget $muonurl -O cert.txt
+          wget https://raw.githubusercontent.com/CMS-LUMI-POG/Normtags/master/normtag_PHYSICS.json -O normtag_PHYSICS.json
+          source normtag.sh > outputs/normtag_PHYSICS_$YEAR.json
+          cp outputs/normtag_PHYSICS_$YEAR.json normtag_PHYSICS.json
+        fi
     # Get the parameters for lumi listings
     - name: Get validated runs file
       run: |
