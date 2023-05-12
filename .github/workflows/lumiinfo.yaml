@@ -22,7 +22,7 @@ jobs:
     - name: Normtag file
       run: |
         echo "Get the normtag file for $YEAR"
-        curl http://api-server-cms-release-info.app.cern.ch/years/val_json?year=$YEAR&type=pp > myjs.json
+        curl 'http://api-server-cms-release-info.app.cern.ch/years/val_json?year=$YEAR&type=pp' > myjs.json
         muonurl=$(jq -r '.[0][1].url' myjs.json)
         wget $muonurl -O cert.txt
         wget https://raw.githubusercontent.com/CMS-LUMI-POG/Normtags/master/normtag_PHYSICS.json -O normtag_PHYSICS.json
@@ -32,7 +32,7 @@ jobs:
     - name: Get validated runs file
       run: |
         echo "Get validated runs for $YEAR"
-        curl http://api-server-cms-release-info.app.cern.ch/years/val_json?year=$YEARtype=pp > myjs.json
+        curl 'http://api-server-cms-release-info.app.cern.ch/years/val_json?year=$YEARtype=pp' > myjs.json
         url=$(jq -r '.[0][0].url' myjs.json)
         wget $url -O cert.txt
     # run the container with the script in the repository
@@ -51,7 +51,7 @@ jobs:
         for era in ${ERAS[*]} 
         do 
           echo "doing " $era
-          curl http://api-server-cms-release-info.app.cern.ch/runeras?run_era=$era > myjs.json
+          curl 'http://api-server-cms-release-info.app.cern.ch/runeras?run_era=$era' > myjs.json
           runmin=$(cat myjs.json | jq -r '.[0].run_min')
           runmax=$(cat myjs.json | jq -r '.[0].run_max')
           docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ $runmin $runmax > outputs/$era'lumi.txt'
