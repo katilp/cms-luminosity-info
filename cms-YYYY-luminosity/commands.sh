@@ -13,7 +13,7 @@ cert=$1
 style=$2
 
 echo "# cert file:"
-cat $cert
+cat /mnt/vol/$cert
 if [ "$3" == "normtag" ]
 then 
   option="--normtag /mnt/vol/normtag_PHYSICS.json"
