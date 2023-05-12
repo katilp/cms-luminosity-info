@@ -18,14 +18,23 @@ jobs:
         mkdir outputs
         echo ls `ls`
         echo pwd `pwd`
+    # Get the part of the normtag file corresponding to validated runs (muons cert file as it has a wider range)
+    - name: Normtag file
+      run: |
+        echo "Get the normtag file for $YEAR"
+        curl http://api-server-cms-release-info.app.cern.ch/years/val_json?year=$YEAR&type=pp > myjs.json
+        muonurl=$(jq -r '.[0][1].url' myjs.json)
+        wget $muonurl -O cert.txt
+        wget https://raw.githubusercontent.com/CMS-LUMI-POG/Normtags/master/normtag_PHYSICS.json -O normtag_PHYSICS.json
+        source normtag.sh > outputs/normtag_PHYSICS_$YEAR.json
+        cp outputs/normtag_PHYSICS_$YEAR.json normtag_PHYSICS.json
     # Get the parameters for lumi listings
     - name: Get validated runs file
       run: |
         echo "Get validated runs for $YEAR"
-        curl http://api-server-cms-release-info.app.cern.ch/years/val_json?year=$YEAR > myjs.json
-        url=$(jq '.[0][0].url' myjs.json | tr -d '"')
+        curl http://api-server-cms-release-info.app.cern.ch/years/val_json?year=$YEARtype=pp > myjs.json
+        url=$(jq -r '.[0][0].url' myjs.json)
         wget $url -O cert.txt
-        cp inputs/normtag_PHYSICS_$YEAR.json inputs/normtag_PHYSICS.json
     # run the container with the script in the repository
     - name: Get luminosity summary listings
       id: container
@@ -42,10 +51,9 @@ jobs:
         for era in ${ERAS[*]} 
         do 
           echo "doing " $era
-          runmin=$(curl http://api-server-cms-release-info.app.cern.ch/runeras/run_min?run_era=$era)
-          runmin=$(echo ${runmin:1:-1})
-          runmax=$(curl http://api-server-cms-release-info.app.cern.ch/runeras/run_max?run_era=$era)
-          runmax=$(echo ${runmax:1:-1})
+          curl http://api-server-cms-release-info.app.cern.ch/runeras?run_era=$era > myjs.json
+          runmin=$(cat myjs.json | jq -r '.[0].run_min')
+          runmax=$(cat myjs.json | jq -r '.[0].run_max')
           docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ $runmin $runmax > outputs/$era'lumi.txt'
         done        
         # Detailed csv per year
@@ -65,4 +73,3 @@ jobs:
       with:
         name: output
         path: cms-YYYY-luminosity/outputs/
-   
