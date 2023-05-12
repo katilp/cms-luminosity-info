@@ -3,8 +3,8 @@ on:
   workflow_dispatch
 env:
   YEAR: 2015
-  ERAS: Run2015D
-  TYPE: pp
+  ERAS: Run2015E
+  TYPE: pphiref
 defaults:
   run: 
     working-directory: cms-YYYY-luminosity
@@ -24,9 +24,7 @@ jobs:
     # Get the part of the normtag file corresponding to validated runs (muons cert file as it has a wider range)
     - name: Normtag file
       run: |
-        echo "Type $TYPE of year $YEAR"
-        YEAR=${{env.YEAR}}
-        echo "Get the normtag file for $YEAR"
+        echo "Get the normtag file for $TYPE of $YEAR"
         curl 'http://api-server-cms-release-info.app.cern.ch/years/val_json?year='"$YEAR"'&type='"$TYPE"'' > myjs.json
         ls -l myjs.json
         muonurl=$(jq -r '.[0][1].url' myjs.json)
@@ -38,9 +36,8 @@ jobs:
     # Get the parameters for lumi listings
     - name: Get validated runs file
       run: |
-        YEAR=${{env.YEAR}}
-        echo "Get validated runs for $YEAR"
-        curl 'http://api-server-cms-release-info.app.cern.ch/years/val_json?year='"$YEAR"'&type=pp' > myjs.json
+        echo "Get validated runs for $TYPE of $YEAR"
+        curl 'http://api-server-cms-release-info.app.cern.ch/years/val_json?year='"$YEAR"'&type='"$TYPE"'' > myjs.json
         url=$(jq -r '.[0][0].url' myjs.json)
         wget $url -O cert.txt
     # run the container with the script in the repository
