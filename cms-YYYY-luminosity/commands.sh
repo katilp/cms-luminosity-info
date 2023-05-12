@@ -12,19 +12,24 @@ set -e
 cert=$1
 style=$2
 
+echo "# cert file:"
+cat $cert
 if [ "$3" == "normtag" ]
 then 
   option="--normtag /mnt/vol/normtag_PHYSICS.json"
+  echo "# normtag file:"
+  cat /mnt/vol/normtag_PHYSICS.json
 elif [ "$3" == "pxl" ]
 then
   option="--type pxl"
 fi
-echo "#from commands: value of options is $option" 
+echo "#from commands: value of options is $option, value of input is $3" 
 
 if [ "$4" == "byls" ]; then mode="--"$4; fi;
 
 if [  -z "$5" ]
 then
+  echo "#Brilcalc command:  brilcalc lumi -c web $mode -i /mnt/vol/$cert -u /fb $option --output-style $style"
   brilcalc lumi -c web $mode -i /mnt/vol/$cert -u /fb $option --output-style $style
 elif [ -z "$6" ]
 then
@@ -32,5 +37,6 @@ then
 else
   runmin=$5
   runmax=$6
+  echo "#Brilcalc command:  brilcalc lumi -c web $mode --begin $runmin --end $runmax -i /mnt/vol/$cert -u /fb $option  --output-style $style"
   brilcalc lumi -c web $mode --begin $runmin --end $runmax -i /mnt/vol/$cert -u /fb $option  --output-style $style
 fi
