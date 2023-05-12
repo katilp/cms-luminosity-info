@@ -18,10 +18,10 @@ jobs:
         mkdir outputs
         echo ls `ls`
         echo pwd `pwd`
-        YEAR=${{env.YEAR}}
     # Get the part of the normtag file corresponding to validated runs (muons cert file as it has a wider range)
     - name: Normtag file
       run: |
+        YEAR=${{env.YEAR}}
         echo "Get the normtag file for $YEAR"
         curl 'http://api-server-cms-release-info.app.cern.ch/years/val_json?year=$YEAR&type=pp' > myjs.json
         muonurl=$(jq -r '.[0][1].url' myjs.json)
@@ -34,6 +34,7 @@ jobs:
     # Get the parameters for lumi listings
     - name: Get validated runs file
       run: |
+        YEAR=${{env.YEAR}}
         echo "Get validated runs for $YEAR"
         curl 'http://api-server-cms-release-info.app.cern.ch/years/val_json?year=$YEARtype=pp' > myjs.json
         url=$(jq -r '.[0][0].url' myjs.json)
@@ -43,6 +44,7 @@ jobs:
       id: container
       run: | 
         # Summary txt table per year
+        YEAR=${{env.YEAR}}
         echo "Create summary table for $YEAR"
         docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ > outputs/$YEAR'lumi.txt'
         # Prescale listing for each run in a single csv file
@@ -50,6 +52,7 @@ jobs:
         docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt csv summ | grep -v "#" | awk '{ print $1 }' FS=':' > run_numbers.txt
         docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/prescale.sh > outputs/'prescale'$YEAR'.csv'
         # Summary txt table per era, for all listed eras
+        ERAS=${{env.ERAS}}
         echo "Create summary tables for $ERAS"
         for era in ${ERAS[*]} 
         do 
