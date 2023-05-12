@@ -18,6 +18,7 @@ jobs:
         mkdir outputs
         echo ls `ls`
         echo pwd `pwd`
+        YEAR=${{env.YEAR}}
     # Get the part of the normtag file corresponding to validated runs (muons cert file as it has a wider range)
     - name: Normtag file
       run: |
