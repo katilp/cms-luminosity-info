@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     name: create lumi tables
     steps:
-    - uses: actions/checkout@v2    
+    - uses: actions/checkout@v3    
     - name: Prepare
       run: |
         mkdir outputs
@@ -69,7 +69,7 @@ jobs:
         #python code/vali_records.py > outputs/vali_records.json
     # upload output file NB bug: https://github.com/actions/upload-artifact/issues/294
     - name: Upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: output
         path: cms-YYYY-luminosity/outputs/
