@@ -48,6 +48,7 @@ jobs:
         # Summary txt table per year
         echo "Create summary table for $YEAR"
         if [ $TYPE == "pp" ]; then option="normtag"; else option="pxl"; fi;
+        echo "From workflow, type is $TYPE, value of option is $option"
         docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab summ option > outputs/$YEAR'lumi.txt'
         # Prescale listing for each run in a single csv file
         echo "Get prescale listing for all run numbers"

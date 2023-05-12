@@ -18,7 +18,8 @@ then
 elif [ "$3" == "pxl" ]
 then
   option="--type pxl"
-fi  
+fi
+echo "#from commands: value of options is $option" 
 
 if [ "$4" == "byls" ]; then mode="--"$4; fi;
 
