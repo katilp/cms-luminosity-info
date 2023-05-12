@@ -25,7 +25,9 @@ jobs:
         curl 'http://api-server-cms-release-info.app.cern.ch/years/val_json?year=$YEAR&type=pp' > myjs.json
         muonurl=$(jq -r '.[0][1].url' myjs.json)
         wget $muonurl -O cert.txt
+        ls -l
         wget https://raw.githubusercontent.com/CMS-LUMI-POG/Normtags/master/normtag_PHYSICS.json -O normtag_PHYSICS.json
+        ls -l
         source normtag.sh > outputs/normtag_PHYSICS_$YEAR.json
         cp outputs/normtag_PHYSICS_$YEAR.json normtag_PHYSICS.json
     # Get the parameters for lumi listings
