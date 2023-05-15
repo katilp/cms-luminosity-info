@@ -49,8 +49,9 @@ jobs:
       run: | 
         # Summary txt table per year
         echo "Create summary table for $YEAR"
-        # Use normtag file for Run-2 values (CHECK Run-1 HI!)
-        if (( $YEAR > 2014 )); then option="normtag"; else option="pxl"; fi;
+        # Use normtag file for Run-2 values 
+        # and hfoc (the only available option) for Run-1 HI and pp ref
+        if (( $YEAR > 2014 )); then option="normtag"; else option="hfoc"; fi;
         echo "From workflow, type is $TYPE, value of option is $option"
         docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab $option summ > outputs/$YEAR'lumi.txt'
         # Prescale listing for each run in a single csv file
