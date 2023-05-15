@@ -19,9 +19,8 @@ then
   option="--normtag /mnt/vol/normtag_PHYSICS.json"
   echo "# normtag file:"
   cat /mnt/vol/normtag_PHYSICS.json
-elif [ "$3" == "pxl" ]
-then
-  option="--type pxl"
+else
+  option="--type $3"
 fi
 echo "#from commands: value of options is $option, value of input is $3" 
 
