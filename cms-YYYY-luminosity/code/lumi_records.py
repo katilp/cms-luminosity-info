@@ -75,7 +75,7 @@ def create_record(recid, year, era, runtype, uncertainty, lumi_ref, val_recid):
 
     rec["abstract"] = {}
 
-    url = 'http://api-server-cms-release-info.app.cern.ch/runeras/run_era?year='+year+'&type='+type+'-phys&released=yes'
+    url = 'http://api-server-cms-release-info.app.cern.ch/runeras/run_era?year='+year+'&type='+runtype+'-phys&released=yes'
     od_runs = json.loads(requests.get(url).text.strip())
 
     rec["abstract"]["description"] = (
