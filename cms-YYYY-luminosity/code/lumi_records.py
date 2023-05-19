@@ -61,9 +61,21 @@ def create_record(recid, year, era, runtype, uncertainty, lumi_ref, val_recid):
     url = lumi_ref+'/?of=tm&ot=245__a'
     lumi_ref_title = requests.get(url).text.strip()
 
+    if "pphiref" in runtype:
+        collision_text = energy+' proton-proton collision data, needed as reference data for heavy-ion data analysis,'
+    elif "PbPb" in runtype:
+        collision_text = energy+' PbPb heavy-ion collision data'
+    elif "pPb" in runtype:
+        collision_text = energy+' proton-Pb heavy-ion collision data'
+    elif "pp" in runtype:
+        collision_text = energy+' proton-proton collision data'
+        run_range_input = year
+    else:
+        print('Runtype unknown!')
+
     rec["abstract"] = {}
 
-    url = 'http://api-server-cms-release-info.app.cern.ch/runeras/run_era?year='+year+'&released=yes'
+    url = 'http://api-server-cms-release-info.app.cern.ch/runeras/run_era?year='+year+'&type='+type+'-phys&released=yes'
     od_runs = json.loads(requests.get(url).text.strip())
 
     rec["abstract"]["description"] = (
@@ -123,8 +135,7 @@ def create_record(recid, year, era, runtype, uncertainty, lumi_ref, val_recid):
     rec["run_period"] = json.loads(requests.get(url).text.strip())
 
     rec["title"] = (
-        "CMS luminosity information, for %s CMS open data"
-        % year
+        "CMS luminosity information for "+collision_text+" taken in "+year
         )
 
     rec["type"] = {}
