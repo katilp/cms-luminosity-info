@@ -11,12 +11,32 @@ sys.path.insert(1, '../cms-release-info')
 Create a luminosity record.
 """
 
-RECID_START = 1055
-YEAR_RELEASED = 2015
+# May 2023, the last recid 1055 for 2015 pp:
+
+### input for 2013 pPb
+#
+#RECID_START = 1056
+#YEAR_RELEASED = 2013
+#RUN_ERA = "HIRun2013"
+#TYPE = "pPb"
+#
+### input for 2013 ppref
+#
+RECID_START = 1057
+YEAR_RELEASED = 2013
+RUN_ERA = "Run2013A"
+TYPE = "pphiref"
+
+### input for already released 2015, taken into account the updates in the scripts for collision type 
+#
+#RECID_START = 1055
+#YEAR_RELEASED = 2015
+#RUN_ERA = "Run2016H" # single era defined only to get the collision energy, stored per era
+#TYPE = "pp"
 
 
 
-def create_record(recid, year, uncertainty, lumi_ref, val_recid):
+def create_record(recid, year, era, runtype, uncertainty, lumi_ref, val_recid):
     """Create record for the given year."""
 
     rec = {}
@@ -24,6 +44,19 @@ def create_record(recid, year, uncertainty, lumi_ref, val_recid):
     year = str(year)
     year_created = year
     year_published = datetime.date.today().strftime("%Y")
+    runtype = str(runtype)
+    if "pphiref" in runtype :
+        display_runtype = 'pp'
+    else:
+        display_runtype = runtype
+        
+    # Get the energy
+    # Using the run_era, for pp it is needed only here
+    # Could be done differently but this is good enough
+    url = 'http://api-server-cms-release-info.app.cern.ch/runeras/?run_era='+era
+    this_json=json.loads(requests.get(url).text.strip())
+    energy=this_json[0]["energy"]
+
     # NB the reference needs to be to cds for this to work:
     url = lumi_ref+'/?of=tm&ot=245__a'
     lumi_ref_title = requests.get(url).text.strip()
@@ -52,8 +85,8 @@ def create_record(recid, year, uncertainty, lumi_ref, val_recid):
     ]
 
     rec["collision_information"] = {}
-    rec["collision_information"]["energy"] = "13TeV"
-    rec["collision_information"]["type"] = "pp"
+    rec["collision_information"]["energy"] = energy
+    rec["collision_information"]["type"] = display_runtype
 
     rec["date_created"] = [
         year_created,
@@ -109,6 +142,8 @@ def main():
     records = []
     recid = RECID_START
     year = str(YEAR_RELEASED)
+    era = str(RUN_ERA)
+    runtype = str(TYPE)
 
     # this would read from the local json file
     # with open('./inputs/cms_release_info.json') as f:
@@ -119,13 +154,15 @@ def main():
     # this_year = all_years[year]
 
     # this gets json from the api server
-    url = 'http://api-server-cms-release-info.app.cern.ch/years?year='+year+'&type=pp&&output=plain'
+    url = 'http://api-server-cms-release-info.app.cern.ch/years?year='+year+'&type='+runtype+'&output=plain'
     this_year = json.loads(requests.get(url).text.strip())
     
     records.append(
         create_record(
             recid,
             this_year["year"],
+            era,
+            runtype,            
             this_year["lumi_uncertainty"],
             this_year["luminosity_reference"],
             this_year["val_json"][0]["recid"]) # This requires the json files to be in a specific order, with "golden" first
