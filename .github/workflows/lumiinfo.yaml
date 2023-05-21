@@ -2,9 +2,9 @@ name: Build listings and records
 on:
   workflow_dispatch
 env:
-  YEAR: 2013
-  ERAS: HIRun2013
-  TYPE: pPb
+  YEAR: 2015
+  ERAS: Run2015E
+  TYPE: pphiref
 defaults:
   run: 
     working-directory: cms-YYYY-luminosity
