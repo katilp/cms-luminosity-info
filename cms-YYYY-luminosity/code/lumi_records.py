@@ -146,7 +146,7 @@ def create_record(recid, year_n, era, runtype, uncertainty, lumi_ref, val_recid)
         }
     ]
 
-    url = 'http://api-server-cms-release-info.app.cern.ch/runeras/run_era?year='+year+'&type=pp-phys'
+    url = 'http://api-server-cms-release-info.app.cern.ch/runeras/run_era?year='+year+'&type='+runtype+'-phys'
     #rec["run_period"] = read_run_periods(year, 'pp-phys')
     rec["run_period"] = json.loads(requests.get(url).text.strip())
 
