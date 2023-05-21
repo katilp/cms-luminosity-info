@@ -2,9 +2,9 @@ name: Build listings and records
 on:
   workflow_dispatch
 env:
-  YEAR: 2013
-  ERAS: Run2013A
-  TYPE: pphiref
+  YEAR: 2015
+  ERAS: Run2015D
+  TYPE: pp
 defaults:
   run: 
     working-directory: cms-YYYY-luminosity
@@ -71,7 +71,7 @@ jobs:
         done        
         # Detailed csv per year
         echo "Create full csv for $YEAR"
-        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt csv $option byls > outputs/$TYPE$_YEAR'lumibyls.csv'
+        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt csv $option byls > outputs/$TYPE_$YEAR'lumibyls.csv'
         echo ls -l outputs `ls -l outputs`
         echo pwd `pwd`
     # Build the luminosity record
