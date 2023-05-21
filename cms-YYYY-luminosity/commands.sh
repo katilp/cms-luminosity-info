@@ -12,17 +12,17 @@ set -e
 cert=$1
 style=$2
 
-echo "# cert file:"
-cat /mnt/vol/$cert
+#echo "# cert file:"
+#cat /mnt/vol/$cert
 if [ "$3" == "normtag" ]
 then 
   option="--normtag /mnt/vol/normtag_PHYSICS.json"
-  echo "# normtag file:"
-  cat /mnt/vol/normtag_PHYSICS.json
+  #echo "# normtag file:"
+  #cat /mnt/vol/normtag_PHYSICS.json
 else
   option="--type $3"
 fi
-echo "#from commands: value of options is $option, value of input is $3" 
+#echo "#from commands: value of options is $option, value of input is $3" 
 
 if [ "$4" == "byls" ]; then mode="--"$4; fi;
 

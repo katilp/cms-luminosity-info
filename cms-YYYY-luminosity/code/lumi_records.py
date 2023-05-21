@@ -15,10 +15,10 @@ Create a luminosity record.
 
 ### input for 2013 pPb
 #
-#RECID_START = 1056
-#YEAR_RELEASED = 2013
-#RUN_ERA = "HIRun2013"
-#TYPE = "pPb"
+RECID_START = 1056
+YEAR_RELEASED = 2013
+RUN_ERA = "HIRun2013"
+TYPE = "pPb"
 #
 ### input for 2013 ppref
 #
@@ -29,10 +29,10 @@ Create a luminosity record.
 
 ### input for already released 2015, taken into account the updates in the scripts for collision type 
 #
-RECID_START = 1055
-YEAR_RELEASED = 2015
-RUN_ERA = "Run2015D" # single era defined only to get the collision energy, stored per era
-TYPE = "pp"
+#RECID_START = 1055
+#YEAR_RELEASED = 2015
+#RUN_ERA = "Run2015D" # single era defined only to get the collision energy, stored per era
+#TYPE = "pp"
 
 
 
