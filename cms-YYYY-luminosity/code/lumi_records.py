@@ -78,7 +78,7 @@ def create_record(recid, year_n, era, runtype, uncertainty, lumi_ref, val_recid)
 # normtag file only after Run-1
     normtag_text=''
     if year_n < 2014:
-        normtag_text='The luminometer giving the best value for each luminosity section is recorded in a "normtag" file <a href=\"/record/'+recid+'/files/normtag_PHYSICS_'+year+'.json\">normtag_PHYSICS_'+year+'.json</a> that is used in the luminosity calculation.'
+        normtag_text='The luminometer giving the best value for each luminosity section is recorded in a "normtag" file <a href=\"/record/'+str(recid)+'/files/normtag_PHYSICS_'+year+'.json\">normtag_PHYSICS_'+year+'.json</a> that is used in the luminosity calculation.'
 
     rec["abstract"] = {}
 
@@ -86,6 +86,7 @@ def create_record(recid, year_n, era, runtype, uncertainty, lumi_ref, val_recid)
     od_runs = json.loads(requests.get(url).text.strip())
 
 # The use of variable in string with two different notations could be fixed in the following...
+# NB in the  +var+ notation, var needs to be a string
     rec["abstract"]["description"] = (
             "<p>CMS measures the luminosity using different luminometers (luminosity detectors) and algorithms. "+normtag_text+"</p>"
             + "<p>The integrated luminosity for validated runs and luminosity sections of the %s taken in %s (%s) is available in %slumi.txt. %s</p>" % (collision_text, year, ",".join(od_runs), ",".join(od_runs), pp_text)
