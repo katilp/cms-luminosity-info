@@ -78,7 +78,7 @@ def create_record(recid, year_n, era, runtype, uncertainty, lumi_ref, val_recid)
 # normtag file only after Run-1
     normtag_text=''
     if year_n > 2014:
-        normtag_text='The luminometer giving the best value for each luminosity section is recorded in a "normtag" file <a href=\"/record/'+str(recid)+'/files/normtag_PHYSICS_'+year+'.json\">normtag_PHYSICS_'+year+'.json</a> that is used in the luminosity calculation.'
+        normtag_text='The luminometer giving the best value for each luminosity section is recorded in a <strong>normtag</strong> file <a href=\"/record/'+str(recid)+'/files/normtag_PHYSICS_'+year+'.json\">normtag_PHYSICS_'+year+'.json</a> that is used in the luminosity calculation.'
 
     rec["abstract"] = {}
 
@@ -89,10 +89,10 @@ def create_record(recid, year_n, era, runtype, uncertainty, lumi_ref, val_recid)
 # NB in the  +var+ notation, var needs to be a string
     rec["abstract"]["description"] = (
             "<p>CMS measures the luminosity using different luminometers (luminosity detectors) and algorithms. "+normtag_text+"</p>"
-            + "<p>The integrated luminosity for validated runs and luminosity sections of the %s taken in %s (%s) is available in %slumi.txt. %s</p>" % (collision_text, year, ",".join(od_runs), ",".join(od_runs), pp_text)
-            + "<p> For luminosity calculation, a detailed list of luminosity by lumi section is provided in <a href=\"/record/%s/files/%s%slumibyls.csv\">%s%slumibyls.csv</a> for the <a href=\"/record/%s\">list of validated runs</a> and lumi sections.</p>" % (recid, runtype, year, runtype, year, val_recid)
+            + "<p>The integrated luminosity for validated runs and luminosity sections of the %s taken in %s (%s) is available in <a href=\"/record/%s/files/%slumi.txt\">%slumi.txt</a>. %s</p>" % (collision_text, year, ",".join(od_runs), ",".join(od_runs), recid, pp_text)
+            + "<p> For luminosity calculation, a detailed list of luminosity by lumi section is provided in <a href=\"/record/%s/files/%s_%slumibyls.csv\">%s_%slumibyls.csv</a> for the <a href=\"/record/%s\">list of validated runs</a> and lumi sections.</p>" % (recid, runtype, year, runtype, year, val_recid)
             + "<p>The uncertainty in the luminosity measurement of %s data should be considered as %s%% (reference <a href=\"%s\">%s</a>).</p>" % (year, uncertainty, lumi_ref, lumi_ref_title)
-            + "<p>In your estimate for the integrated luminosity, check for which runs the trigger you have selected is active and sum the values for those runs. If you are using prescaled triggers, you can find the trigger prescale factors as shown in <a href=\"/record/5004\">the trigger examples</a>. The change of prescales (run, lumi section, index of prescales) is recorded in <a href=\"/record/%s/files/prescale%s%s.csv\">prescale%s%s.csv</a></p>" % (recid, runtype, year, runtype, year)
+            + "<p>In your estimate for the integrated luminosity, check for which runs the trigger you have selected is active and sum the values for those runs. If you are using prescaled triggers, you can find the trigger prescale factors as shown in <a href=\"/record/5004\">the trigger examples</a>. The change of prescales (run, lumi section, index of prescales) is recorded in <a href=\"/record/%s/files/prescale_%s%s.csv\">prescale_%s%s.csv</a></p>" % (recid, runtype, year, runtype, year)
             + "<p>Additional information on how to extract luminosity values using the <strong>brilcalc tool</strong> can be found in the <a href=\"/docs/cms-guide-luminosity-calculation\"> luminosity calculation guide</a>.</p>"
         )
 
