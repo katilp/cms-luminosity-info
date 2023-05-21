@@ -53,7 +53,7 @@ jobs:
         # and hfoc (the only available option) for Run-1 HI and pp ref
         if (( $YEAR > 2014 )); then option="normtag"; else option="hfoc"; fi;
         echo "From workflow, type is $TYPE, value of option is $option"
-        docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab $option summ > outputs/$YEAR'lumi.txt'
+        [ $TYPE == "pp" ] && docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt tab $option summ > outputs/$YEAR'lumi.txt'
         # Prescale listing for each run in a single csv file
         echo "Get prescale listing for all run numbers"
         docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt csv $option summ | grep -v "#" |  grep  "/" | awk '{ print $1 }' FS=':' > run_numbers.txt
