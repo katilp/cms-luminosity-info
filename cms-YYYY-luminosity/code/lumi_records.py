@@ -36,12 +36,12 @@ TYPE = "pphiref"
 
 
 
-def create_record(recid, year, era, runtype, uncertainty, lumi_ref, val_recid):
+def create_record(recid, year_n, era, runtype, uncertainty, lumi_ref, val_recid):
     """Create record for the given year."""
 
     rec = {}
 
-    year = str(year)
+    year = str(year_n)
     year_created = year
     year_published = datetime.date.today().strftime("%Y")
     runtype = str(runtype)
@@ -75,13 +75,19 @@ def create_record(recid, year, era, runtype, uncertainty, lumi_ref, val_recid):
     else:
         print('Runtype unknown!')
 
+# normtag file only after Run-1
+    normtag_text=''
+    if year_n < 2014:
+        normtag_text='The luminometer giving the best value for each luminosity section is recorded in a "normtag" file <a href=\"/record/'+recid+'/files/normtag_PHYSICS_'+year+'.json\">normtag_PHYSICS_'+year+'.json</a> that is used in the luminosity calculation.'
+
     rec["abstract"] = {}
 
     url = 'http://api-server-cms-release-info.app.cern.ch/runeras/run_era?year='+year+'&type='+runtype+'-phys&released=yes'
     od_runs = json.loads(requests.get(url).text.strip())
 
+# The use of variable in string with two different notations could be fixed in the following...
     rec["abstract"]["description"] = (
-            "<p>CMS measures the luminosity using different luminometers (luminosity detectors) and algorithms. The luminometer giving the best value for each luminosity section is recorded in a 'normtag' file <a href=\"/record/%s/files/normtag_PHYSICS_%s.json\">normtag_PHYSICS_%s.json</a> that is used in the luminosity calculation.</p>" % (recid, year, year)
+            "<p>CMS measures the luminosity using different luminometers (luminosity detectors) and algorithms. "+normtag_text+"</p>"
             + "<p>The integrated luminosity for validated runs and luminosity sections of the %s taken in %s (%s) is available in %slumi.txt. %s</p>" % (collision_text, year, ",".join(od_runs), ",".join(od_runs), pp_text)
             + "<p> For luminosity calculation, a detailed list of luminosity by lumi section is provided in <a href=\"/record/%s/files/%s%slumibyls.csv\">%s%slumibyls.csv</a> for the <a href=\"/record/%s\">list of validated runs</a> and lumi sections.</p>" % (recid, runtype, year, runtype, year, val_recid)
             + "<p>The uncertainty in the luminosity measurement of %s data should be considered as %s%% (reference <a href=\"%s\">%s</a>).</p>" % (year, uncertainty, lumi_ref, lumi_ref_title)
