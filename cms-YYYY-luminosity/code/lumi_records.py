@@ -22,17 +22,17 @@ Create a luminosity record.
 #
 ### input for 2013 ppref
 #
-#RECID_START = 1057
-#YEAR_RELEASED = 2013
-#RUN_ERA = "Run2013A"
-#TYPE = "pphiref"
+RECID_START = 1057
+YEAR_RELEASED = 2013
+RUN_ERA = "Run2013A"
+TYPE = "pphiref"
 #
 ### input for 2015 ppref
 #
-RECID_START = 1058
-YEAR_RELEASED = 2015
-RUN_ERA = "Run2015E"
-TYPE = "pphiref"
+#RECID_START = 1058
+#YEAR_RELEASED = 2015
+#RUN_ERA = "Run2015E"
+#TYPE = "pphiref"
 #
 ### input for already released 2015, taken into account the updates in the scripts for collision type 
 #

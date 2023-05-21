@@ -2,8 +2,8 @@ name: Build listings and records
 on:
   workflow_dispatch
 env:
-  YEAR: 2015
-  ERAS: Run2015E
+  YEAR: 2013
+  ERAS: Run2013A
   TYPE: pphiref
 defaults:
   run: 
