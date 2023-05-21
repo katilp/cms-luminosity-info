@@ -61,7 +61,7 @@ def create_record(recid, year, era, runtype, uncertainty, lumi_ref, val_recid):
     url = lumi_ref+'/?of=tm&ot=245__a'
     lumi_ref_title = requests.get(url).text.strip()
 
-    pptext=''
+    pp_text=''
     if "pphiref" in runtype:
         collision_text = energy+' proton-proton collision data, needed as reference data for heavy-ion data analysis,'
     elif "PbPb" in runtype:
@@ -71,7 +71,7 @@ def create_record(recid, year, era, runtype, uncertainty, lumi_ref, val_recid):
     elif "pp" in runtype:
         collision_text = energy+' proton-proton collision data'
         run_range_input = year
-        pptext='(The integrated luminosity for validated runs and luminosity sections of all '+year+' p-p data taking is available in '+year+'lumi.txt.)'
+        pp_text='(The integrated luminosity for validated runs and luminosity sections of all '+year+' p-p data taking is available in '+year+'lumi.txt.)'
     else:
         print('Runtype unknown!')
 
