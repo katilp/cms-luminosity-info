@@ -9,46 +9,25 @@ sys.path.insert(1, '../cms-release-info')
 
 """
 Create a luminosity record.
+Input arguments
+- recid (May 2023, the last used recid was 1055 for 2015 pp)
+- year to be released
+- run era (for pp, give one of the released eras, it is needed to get the collision energy, stored per era)
+- type (pp, pPb, pphiref, PbPb)
+
+Inputs:
+- 2013 pPb: 1056 2013 HIRun2013 pPb
+- 2013 ppref: 1057 2013 Run2013A pphiref
+- 2015 ppref: 1058 2015 Run2015E pphiref
+- 2015 pp: 1055 2015 Run2015D pp (not used to build the current record, but tested to produce the same files)
+
 """
 
-# May 2023, the last recid 1055 for 2015 pp:
-
-### input for 2013 pPb
-#
-#RECID_START = 1056
-#YEAR_RELEASED = 2013
-#RUN_ERA = "HIRun2013"
-#TYPE = "pPb"
-#
-### input for 2013 ppref
-#
-#RECID_START = 1057
-#YEAR_RELEASED = 2013
-#RUN_ERA = "Run2013A"
-#TYPE = "pphiref"
-#
-### input for 2015 ppref
-#
-RECID_START = 1058
-YEAR_RELEASED = 2015
-RUN_ERA = "Run2015E"
-TYPE = "pphiref"
-#
-### input for already released 2015, taken into account the updates in the scripts for collision type 
-#
-#RECID_START = 1055
-#YEAR_RELEASED = 2015
-#RUN_ERA = "Run2015D" # single era defined only to get the collision energy, stored per era
-#TYPE = "pp"
-
-
-
-def create_record(recid, year_n, era, runtype, uncertainty, lumi_ref, val_recid):
+def create_record(recid, year, era, runtype, uncertainty, lumi_ref, val_recid):
     """Create record for the given year."""
 
     rec = {}
 
-    year = str(year_n)
     year_created = year
     year_published = datetime.date.today().strftime("%Y")
     runtype = str(runtype)
@@ -84,7 +63,7 @@ def create_record(recid, year_n, era, runtype, uncertainty, lumi_ref, val_recid)
 
 # normtag file only after Run-1
     normtag_text=''
-    if year_n > 2014:
+    if int(year) > 2014:
         normtag_text='The luminometer giving the best value for each luminosity section is recorded in a <strong>normtag</strong> file <a href=\"/record/'+str(recid)+'/files/normtag_PHYSICS_'+runtype+'_'+year+'.json\">normtag_PHYSICS_'+runtype+'_'+year+'.json</a> that is used in the luminosity calculation.'
 
     rec["abstract"] = {}
@@ -167,10 +146,10 @@ def main():
     "Do the job."
 
     records = []
-    recid = RECID_START
-    year = str(YEAR_RELEASED)
-    era = str(RUN_ERA)
-    runtype = str(TYPE)
+    recid = sys.argv[1]
+    year = sys.argv[2]
+    era = sys.argv[3]
+    runtype = sys.argv[4]
 
     # this would read from the local json file
     # with open('./inputs/cms_release_info.json') as f:
@@ -180,14 +159,14 @@ def main():
     # all_years = json.loads(data)    
     # this_year = all_years[year]
 
-    # this gets json from the api server
+    # this gets json from the api server 
     url = 'http://api-server-cms-release-info.app.cern.ch/years?year='+year+'&type='+runtype+'&output=plain'
-    this_year = json.loads(requests.get(url).text.strip())
+    this_year = json.loads(requests.get(url).text.strip()) 
     
     records.append(
         create_record(
             recid,
-            this_year["year"],
+            year,
             era,
             runtype,            
             this_year["lumi_uncertainty"],
