@@ -85,7 +85,7 @@ def create_record(recid, year_n, era, runtype, uncertainty, lumi_ref, val_recid)
 # normtag file only after Run-1
     normtag_text=''
     if year_n > 2014:
-        normtag_text='The luminometer giving the best value for each luminosity section is recorded in a <strong>normtag</strong> file <a href=\"/record/'+str(recid)+'/files/normtag_PHYSICS_'+year+'.json\">normtag_PHYSICS_'+year+'.json</a> that is used in the luminosity calculation.'
+        normtag_text='The luminometer giving the best value for each luminosity section is recorded in a <strong>normtag</strong> file <a href=\"/record/'+str(recid)+'/files/normtag_PHYSICS_'+runtype+'_'+year+'.json\">normtag_PHYSICS_'+runtype+'_'+year+'.json</a> that is used in the luminosity calculation.'
 
     rec["abstract"] = {}
 
