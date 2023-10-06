@@ -4,7 +4,7 @@ on:
 env:
   RECID: 1059
   YEAR: 2016
-  ERAS: Run2015G Run2016H
+  ERAS: Run2016G Run2016H
   TYPE: pp
   # Inputs:
   # - 2013 pPb: 1056 2013 HIRun2013 pPb
