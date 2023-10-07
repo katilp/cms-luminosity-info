@@ -29,6 +29,7 @@ jobs:
         RECID=${{env.RECID}}
         YEAR=${{env.YEAR}}
         TYPE=${{env.TYPE}}
+        ERAS=${{env.ERAS}}
     # Get the part of the normtag file corresponding to validated runs (muons cert file as it has a wider range)
     - name: Normtag file
       run: |
@@ -67,9 +68,8 @@ jobs:
         ##FORTEST docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/commands.sh cert.txt csv $option summ | grep -v "#" |  grep  "/" | awk '{ print $1 }' FS=':' > run_numbers.txt
         ##FORTEST docker run -v $(pwd):/mnt/vol -w /home/brilws gitlab-registry.cern.ch/cms-cloud/brilws-docker /bin/bash /mnt/vol/prescale.sh > outputs/'prescale_'$TYPE$YEAR'.csv'
         # Summary txt table per era, for all listed eras
-        # ERAS=${{env.ERAS}}
-        echo "Create summary tables for " ${{env.ERAS}}
-        for era in ${{env.ERAS}}
+        echo "Create summary tables for " $ERAS
+        for era in $ERAS
         do 
           echo "doing " $era
           curl 'http://api-server-cms-release-info.app.cern.ch/runeras?run_era='"$era"'' > myjs.json
@@ -86,9 +86,9 @@ jobs:
     - name: Build the luminosity records
       id: record
       run: |
-        # just take one of the eras to variable era, no matter which
+        # just take one of the eras to a variable era, no matter which
         for era in $ERAS; do echo $era; done  
-        echo "build record for" $RECID $YEAR $ERA $TYPE
+        echo "build record for" $RECID $YEAR $era $TYPE
         python code/lumi_records.py $RECID $YEAR $era $TYPE > outputs/lumi_records.json
         #python code/vali_records.py > outputs/vali_records.json
     # upload output file NB bug: https://github.com/actions/upload-artifact/issues/294
