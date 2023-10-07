@@ -86,7 +86,7 @@ jobs:
     - name: Build the luminosity records
       id: record
       run: |
-        python code/lumi_records.py $RECID $YEAR ${ERAS[0]} $TYPE > outputs/lumi_records.json
+        python code/lumi_records.py $RECID $YEAR $era $TYPE > outputs/lumi_records.json
         #python code/vali_records.py > outputs/vali_records.json
     # upload output file NB bug: https://github.com/actions/upload-artifact/issues/294
     - name: Upload artifact
